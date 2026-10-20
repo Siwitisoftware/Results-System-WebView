@@ -1,0 +1,39 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.siwitisoftware.results'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.siwitisoftware.results.twa'
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    signingConfigs {
+        release {
+            def ksPath = System.getenv('ANDROID_KEYSTORE_PATH')
+            def ksPass = System.getenv('ANDROID_KEYSTORE_PASSWORD')
+            def keyAliasValue = System.getenv('ANDROID_KEY_ALIAS')
+            def keyPass = System.getenv('ANDROID_KEY_PASSWORD')
+            if (ksPath && ksPass && keyAliasValue && keyPass) {
+                storeFile file(ksPath)
+                storePassword ksPass
+                keyAlias keyAliasValue
+                keyPassword keyPass
+            }
+        }
+    }
+
+    buildTypes {
+        debug { }
+        release {
+            minifyEnabled false
+            if (System.getenv('ANDROID_KEYSTORE_PATH')) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+}
